@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/posts.dart';
 import 'package:todo_app/services/postApi.dart';
+import 'package:todo_app/navigationBar.dart';
 
 class PostForm extends StatefulWidget {
   final Post? post; // Null untuk create, ada untuk update
@@ -46,16 +47,31 @@ class _PostFormState extends State<PostForm> {
           body: _bodyController.text,
         );
 
+        print('Attempting to save post: ${post.toJson()}');
+
         if (widget.post == null) {
           // Create new post
+          print('Creating new post...');
           await postApi.createPost(post);
+          print('Post created successfully');
         } else {
           // Update existing post
+          print('Updating post with ID: ${post.id}');
           await postApi.updatePost(post);
+          print('Post updated successfully');
         }
 
-        Navigator.pop(context, true); // Kembali dengan success flag
+        print('Navigating back to MainNavigator with Posts tab...');
+        // Navigate back to MainNavigator and set to Posts tab (index 2)
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const MainNavigator(initialIndex: 2),
+          ),
+          (Route<dynamic> route) => false,
+        );
+        print('Navigation completed');
       } catch (e) {
+        print('Error in savePost: $e');
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Error: $e')));

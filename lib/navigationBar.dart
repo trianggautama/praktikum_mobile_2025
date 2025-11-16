@@ -5,7 +5,9 @@ import 'package:todo_app/homePage.dart';
 import 'package:todo_app/postListScreen.dart';
 
 class MainNavigator extends StatefulWidget {
-  const MainNavigator({super.key});
+  final int initialIndex;
+
+  const MainNavigator({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigator> createState() => _MainNavigatorState();
@@ -19,6 +21,12 @@ class _MainNavigatorState extends State<MainNavigator> {
     const ProfilePage(),
     const PostListScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
